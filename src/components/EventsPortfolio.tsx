@@ -22,7 +22,6 @@ export const EventsPortfolio: React.FC<EventsPortfolioProps> = ({ onSelectEvent 
 
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const progressLineRef = useRef<HTMLDivElement>(null);
 
   const categories = ['All', ...EVENT_CATEGORIES];
   const audiences = ['All', ...TARGET_AUDIENCES];
@@ -76,19 +75,6 @@ export const EventsPortfolio: React.FC<EventsPortfolioProps> = ({ onSelectEvent 
         x: () => -getScrollAmount(),
         ease: 'none',
       });
-
-      // Synchronize horizontal progress bar
-      if (progressLineRef.current) {
-        tl.to(
-          progressLineRef.current,
-          {
-            scaleX: 1,
-            transformOrigin: 'left center',
-            ease: 'none',
-          },
-          0
-        );
-      }
     }, sectionRef);
 
     // Refresh ScrollTrigger after DOM layout calculations
@@ -235,7 +221,7 @@ export const EventsPortfolio: React.FC<EventsPortfolioProps> = ({ onSelectEvent 
       </div>
 
       {/* Main Single Horizontal Row Strip (GSAP ScrollTrigger Pinned Target) */}
-      <div className="relative w-full flex-1 min-h-0 flex items-center overflow-hidden py-2 sm:py-3">
+      <div className="relative w-full flex-1 min-h-0 flex items-center overflow-hidden py-3 sm:py-6">
         <div
           ref={trackRef}
           className="flex flex-nowrap items-stretch gap-5 sm:gap-6 px-6 sm:px-12 will-change-transform"
@@ -269,29 +255,6 @@ export const EventsPortfolio: React.FC<EventsPortfolioProps> = ({ onSelectEvent 
               </button>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Bottom Timeline Progress Bar & Hint */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3 sm:pb-4 pt-1 z-10 shrink-0">
-        <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-brand-mutedIvory/70 mb-1.5 font-mono">
-          <span className="flex items-center gap-1.5 text-brand-gold/90 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse" />
-            Scroll down vertically to navigate sequence
-          </span>
-          <span>{Math.round(scrollProgress * 100)}% Traversed</span>
-        </div>
-
-        {/* Gold Dynamic Progress Track */}
-        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-          <div
-            ref={progressLineRef}
-            className="h-full bg-gold-gradient rounded-full transition-transform duration-75"
-            style={{
-              transform: `scaleX(${scrollProgress})`,
-              transformOrigin: 'left center',
-            }}
-          />
         </div>
       </div>
     </section>
