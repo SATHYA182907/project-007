@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import { AuthProvider } from './hooks/useAuth';
 
 // Division Portals
@@ -22,6 +23,7 @@ import { AdminProfilePage } from './pages/admin/AdminProfilePage';
 
 export function App() {
   return (
+    <MotionConfig reducedMotion="user">
     <AuthProvider>
       <BrowserRouter>
         <Routes>
@@ -59,6 +61,7 @@ export function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </MotionConfig>
   );
 }
 
