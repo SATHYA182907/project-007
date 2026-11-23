@@ -6,3 +6,7 @@ export { CountUp } from './CountUp';
 export { Marquee } from './Marquee';
 export { SectionHeader } from './SectionHeader';
 export { ScrollProgress } from './ScrollProgress';
+export { StackingCards } from './StackingCards';
+export { ScrollCard } from './ScrollCard';
+export { ScrollTextReveal } from './ScrollTextReveal';
+export { CursorGlow } from './CursorGlow';

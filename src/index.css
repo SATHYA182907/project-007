@@ -105,6 +105,8 @@ html { scroll-padding-top: 24px; }
   padding-top: clamp(3.5rem, 7vw, 5.5rem);
   padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
   overflow: hidden;
+  /* clip (not hidden) so position: sticky keeps working inside sections */
+  overflow: clip;
 }
 
 /* Eyebrow pill */

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
-import { ScrollProgress, SplitText } from '../components/fx';
+import { ScrollProgress, SplitText, CursorGlow } from '../components/fx';
 
 import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';
@@ -58,7 +58,7 @@ export const PortfolioPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="fx-grain min-h-screen bg-brand-dark text-brand-ivory font-sans selection:bg-brand-gold selection:text-brand-dark overflow-x-hidden">
+    <div className="fx-grain min-h-screen bg-brand-dark text-brand-ivory font-sans selection:bg-brand-gold selection:text-brand-dark overflow-x-clip">
       {/* Cinematic Brand Entry Loader */}
       <AnimatePresence>
         {isLoading && (
@@ -99,6 +99,7 @@ export const PortfolioPage: React.FC = () => {
       {!isLoading && (
         <>
           <ScrollProgress />
+          <CursorGlow />
           <BackToTop />
 
           {/* Responsive Navbar */}

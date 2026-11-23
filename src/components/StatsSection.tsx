@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, CalendarCheck, Building2, Clock, ShieldCheck } from 'lucide-react';
-import { SectionHeader, TiltCard, CountUp, Reveal } from './fx';
+import { SectionHeader, TiltCard, CountUp, ScrollCard } from './fx';
 
 const verifiedHighlights = [
   { label: 'Diwali Carnival Festival', value: '2,000+', note: 'Participants immersed in offline games & cultural dance' },
@@ -57,7 +57,7 @@ export const StatsSection: React.FC = () => {
         {/* Bento grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:grid-flow-dense">
           {counters.map((c, i) => (
-            <Reveal key={c.label} delay={i * 0.08} className={c.featured ? 'col-span-2 lg:col-span-2 lg:row-span-2' : 'col-span-1'}>
+            <ScrollCard key={c.label} variant={i === 0 ? 'zoom' : 'tilt'} offset={i} className={c.featured ? 'col-span-2 lg:col-span-2 lg:row-span-2' : 'col-span-1'}>
               <TiltCard
                 max={5}
                 className={`h-full rounded-3xl p-5 sm:p-7 fx-glass overflow-hidden flex flex-col justify-between ${c.featured ? 'border-brand-gold/40 shadow-glow-gold min-h-[220px] lg:min-h-full' : ''}`}
@@ -77,11 +77,11 @@ export const StatsSection: React.FC = () => {
                   <p className="text-[11px] sm:text-xs text-brand-mutedIvory/80 leading-relaxed">{c.note}</p>
                 </div>
               </TiltCard>
-            </Reveal>
+            </ScrollCard>
           ))}
 
           {/* Measurement Standard */}
-          <Reveal delay={0.2} className="col-span-2 lg:col-span-2">
+          <ScrollCard variant="rise" offset={1} className="col-span-2 lg:col-span-2">
             <div className="h-full p-5 sm:p-6 rounded-3xl fx-glass border-brand-gold/20 space-y-3">
               <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-brand-gold">
                 <Clock className="w-4 h-4" />
@@ -101,20 +101,20 @@ export const StatsSection: React.FC = () => {
                 </p>
               </div>
             </div>
-          </Reveal>
+          </ScrollCard>
         </div>
 
         {/* Event-level verified milestones */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-3 sm:mt-4">
           {verifiedHighlights.map((vh, i) => (
-            <Reveal key={vh.label} delay={i * 0.06}>
+            <ScrollCard key={vh.label} variant="tilt" offset={i}>
               <div className="group h-full p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-brand-gold/30 hover:bg-white/[0.04] transition-all duration-500 relative overflow-hidden">
                 <span className="absolute left-0 top-0 h-full w-[2px] bg-gold-gradient scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500" />
                 <span className="text-xl sm:text-2xl font-serif font-bold text-brand-gold font-mono block mb-1">{vh.value}</span>
                 <h5 className="text-[10px] sm:text-xs font-serif font-semibold text-brand-ivory uppercase tracking-wider mb-1">{vh.label}</h5>
                 <p className="text-[11px] text-brand-mutedIvory font-light leading-relaxed">{vh.note}</p>
               </div>
-            </Reveal>
+            </ScrollCard>
           ))}
         </div>
       </div>

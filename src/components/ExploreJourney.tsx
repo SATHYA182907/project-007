@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Calendar, MapPin, Users, ChevronRight, ChevronLeft, Compass, Quote } from 'lucide-react';
-import { SectionHeader } from './fx';
+import { SectionHeader, ScrollCard } from './fx';
 
 import jWalkathon from '../assets/events/portfolio_p10_img1.jpeg';
 import jDiwali from '../assets/events/portfolio_p11_img4.jpeg';
@@ -182,7 +182,8 @@ export const ExploreJourney: React.FC = () => {
 
         {/* Milestone Spotlight */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-stretch">
-          <div className="lg:col-span-7 relative rounded-3xl overflow-hidden aspect-[16/10] lg:aspect-auto lg:min-h-[400px] border border-white/10 shadow-2xl bg-black">
+          <ScrollCard variant="left" className="lg:col-span-7">
+          <div className="relative h-full rounded-3xl overflow-hidden aspect-[16/10] lg:aspect-auto lg:min-h-[400px] border border-white/10 shadow-2xl bg-black">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={activeMilestone.id}
@@ -208,8 +209,10 @@ export const ExploreJourney: React.FC = () => {
               <span className="bg-brand-gold text-brand-dark px-3 py-1.5 rounded-full font-bold text-[10px] sm:text-[11px] shrink-0">{activeMilestone.participants}</span>
             </div>
           </div>
+          </ScrollCard>
 
-          <div className="lg:col-span-5 rounded-3xl fx-glass p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
+          <ScrollCard variant="right" className="lg:col-span-5">
+          <div className="h-full rounded-3xl fx-glass p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeMilestone.id}
@@ -257,6 +260,7 @@ export const ExploreJourney: React.FC = () => {
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
+          </ScrollCard>
         </div>
       </div>
     </section>

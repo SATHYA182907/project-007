@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Maximize2, X, ZoomIn, ZoomOut, Image as ImageIcon, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
-import { SectionHeader } from './fx';
+import { ScrollCard, SectionHeader } from './fx';
 
 import p10_1 from '../assets/events/portfolio_p10_img1.jpeg';
 import p10_2 from '../assets/events/portfolio_p10_img2.jpeg';
@@ -198,6 +198,7 @@ export const GallerySection: React.FC = () => {
         </AnimatePresence>
 
         {/* Bento grid */}
+        <ScrollCard variant="tilt">
         <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 auto-rows-[140px] sm:auto-rows-[170px] lg:auto-rows-[190px] gap-2.5 sm:gap-4 grid-flow-dense">
           <AnimatePresence mode="popLayout">
             {visibleItems.map((item, idx) => (
@@ -235,6 +236,7 @@ export const GallerySection: React.FC = () => {
             ))}
           </AnimatePresence>
         </motion.div>
+        </ScrollCard>
 
         {(hiddenCount > 0 || showAll) && filteredItems.length > PREVIEW && (
           <div className="mt-6 flex justify-center">
