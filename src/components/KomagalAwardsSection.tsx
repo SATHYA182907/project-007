@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award, Trophy, Users, Building2, MapPin, Clock } from 'lucide-react';
-import { SplitText, Reveal, TiltCard } from './fx';
+import { SplitText, TiltCard, ScrollCard, ScrollTextReveal } from './fx';
 
 import stageImg from '../assets/events/portfolio_p13_img1.jpeg'; // Stage & ceremony
 import trophyImg from '../assets/events/portfolio_p13_img2.jpeg'; // Trophies & citations
@@ -55,7 +55,7 @@ export const KomagalAwardsSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left: Photo showcase */}
-        <Reveal className="lg:col-span-7 order-2 lg:order-1" scale={0.96}>
+        <ScrollCard variant="zoom" className="lg:col-span-7 order-2 lg:order-1">
           <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
             <div className="relative rounded-3xl overflow-hidden aspect-[16/10] border border-brand-gold/40 shadow-[0_30px_80px_-20px_rgba(212,175,55,0.35)] bg-black">
               <AnimatePresence initial={false}>
@@ -115,7 +115,7 @@ export const KomagalAwardsSection: React.FC = () => {
               ))}
             </div>
           </div>
-        </Reveal>
+        </ScrollCard>
 
         {/* Right: narrative */}
         <div className="lg:col-span-5 order-1 lg:order-2 space-y-5">
@@ -143,13 +143,12 @@ export const KomagalAwardsSection: React.FC = () => {
             wordClassName="fx-shimmer"
             className="text-xl sm:text-2xl font-serif italic"
           />
-          <Reveal delay={0.3}>
-            <p className="text-sm text-brand-mutedIvory leading-relaxed font-light">
-              A prestigious signature ceremony instituted by Offscreen Hub to honor educators, healthcare workers, social reformers, and grassroot heroes who transform our world every day.
-            </p>
-          </Reveal>
+          <ScrollTextReveal
+            className="text-sm sm:text-base text-brand-ivory leading-relaxed font-light"
+            text="A prestigious signature ceremony instituted by Offscreen Hub to honor educators, healthcare workers, social reformers, and grassroot heroes who transform our world every day."
+          />
 
-          <Reveal delay={0.4}>
+          <ScrollCard variant="right">
             <TiltCard max={4} className="p-5 sm:p-6 rounded-3xl fx-glass border-brand-gold/25 space-y-3">
               <span className="text-[11px] font-mono font-semibold uppercase tracking-widest text-brand-gold flex items-center gap-2">
                 <Award className="w-4 h-4" /> The Komagal Legacy
@@ -187,7 +186,7 @@ export const KomagalAwardsSection: React.FC = () => {
                 </div>
               </div>
             </TiltCard>
-          </Reveal>
+          </ScrollCard>
         </div>
       </div>
     </section>

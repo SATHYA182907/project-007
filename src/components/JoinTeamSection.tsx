@@ -13,7 +13,7 @@ import {
   Clock3,
 } from 'lucide-react';
 import { dbService } from '../services/db';
-import { SectionHeader, Reveal } from './fx';
+import { SectionHeader, Reveal, ScrollCard } from './fx';
 
 export const JoinTeamSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -185,7 +185,7 @@ export const JoinTeamSection: React.FC = () => {
         </div>
 
         {/* Form Container */}
-        <div className="lg:col-span-7">
+        <ScrollCard variant="right" className="lg:col-span-7">
           <motion.div
             initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -405,7 +405,7 @@ export const JoinTeamSection: React.FC = () => {
               )}
             </AnimatePresence>
           </motion.div>
-        </div>
+        </ScrollCard>
       </div>
     </section>
   );

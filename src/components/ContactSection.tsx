@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, ArrowUpRight, Sparkles } from 'lucide-react';
 import { siteContent } from '../data/siteContent';
-import { SplitText, TiltCard, Magnetic } from './fx';
+import { SplitText, TiltCard, Magnetic, ScrollTextReveal } from './fx';
 import bgImg from '../assets/events/portfolio_p10_img1.jpeg';
 
 interface ContactSectionProps {
@@ -48,15 +48,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenJoinModal 
           <SplitText as="span" text="Together." delay={0.3} by="chars" wordClassName="fx-shimmer" className="block" />
         </h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="max-w-2xl mx-auto text-sm sm:text-lg text-brand-mutedIvory font-light leading-relaxed mb-8"
-        >
-          Together, let’s create more meaningful childhoods and stronger communities across schools, families, and organizations.
-        </motion.p>
+        <ScrollTextReveal
+          className="max-w-2xl mx-auto text-base sm:text-xl text-brand-ivory font-light leading-relaxed mb-8"
+          text="Together, let’s create more meaningful childhoods and stronger communities across schools, families, and organizations."
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
           {methods.map((m, i) => (

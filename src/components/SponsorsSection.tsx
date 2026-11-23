@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SectionHeader, Marquee, Magnetic } from './fx';
+import { ScrollCard, SectionHeader, Marquee, Magnetic } from './fx';
 import { Building2, Handshake, ArrowUpRight, ChevronDown } from 'lucide-react';
 
 interface Partner {
@@ -111,6 +111,7 @@ export const SponsorsSection: React.FC = () => {
         </div>
 
         {/* Compact typography-first partner grid (no fake logos) */}
+        <ScrollCard variant="tilt">
         <motion.div layout className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           <AnimatePresence mode="popLayout">
             {visiblePartners.map((partner, index) => (
@@ -140,6 +141,7 @@ export const SponsorsSection: React.FC = () => {
             ))}
           </AnimatePresence>
         </motion.div>
+        </ScrollCard>
 
         {filteredPartners.length > PREVIEW && (
           <div className="mt-5 flex justify-center">

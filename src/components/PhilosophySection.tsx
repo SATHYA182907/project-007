@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MonitorX, Sparkles, CheckCircle2 } from 'lucide-react';
-import { SectionHeader, Reveal } from './fx';
+import { SectionHeader, Reveal, ScrollCard, ScrollTextReveal } from './fx';
 import realWorldImg from '../assets/events/portfolio_p10_img2.jpeg'; // Children's Day joyful real-world moment
 
 const pillars = [
@@ -58,15 +58,16 @@ export const PhilosophySection: React.FC = () => {
 
           <Reveal delay={0.25}>
             <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-brand-gold/15 via-brand-gold/5 to-transparent border-l-4 border-brand-gold">
-              <p className="text-base sm:text-lg font-serif italic text-brand-ivory">
-                “The best childhood memories are made through experiences — not screens.”
-              </p>
+              <ScrollTextReveal
+                className="text-lg sm:text-2xl font-serif italic text-brand-ivory leading-snug"
+                text="“The best childhood memories are made through experiences — not screens.”"
+              />
             </div>
           </Reveal>
         </div>
 
         {/* Right: Screen vs Real toggle */}
-        <Reveal className="lg:col-span-6 flex flex-col items-center" x={30} y={0}>
+        <ScrollCard variant="right" className="lg:col-span-6 flex flex-col items-center">
           <div className="relative flex items-center p-1 rounded-full fx-glass mb-4">
             {(['screen', 'real'] as const).map((k) => (
               <button
@@ -136,7 +137,7 @@ export const PhilosophySection: React.FC = () => {
           </div>
 
           <p className="text-[10px] text-brand-gold/80 font-semibold uppercase tracking-[0.3em] mt-4">SCREEN TIME → REAL-WORLD TIME</p>
-        </Reveal>
+        </ScrollCard>
       </div>
     </section>
   );

@@ -34,12 +34,41 @@ export const EventsPortfolio: React.FC<EventsPortfolioProps> = ({ onSelectEvent 
     return matchesCategory && matchesAudience;
   });
 
+  // Cards fold in (rotateY + scale + fade) as they cross the rail's edges
+  const applyEdgeFold = useCallback(() => {
+    const el = railRef.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const box = el.getBoundingClientRect();
+    el.querySelectorAll<HTMLElement>('[data-fold]').forEach((card) => {
+      const r = card.getBoundingClientRect();
+      const overRight = Math.min(1, Math.max(0, (r.right - box.right + 24) / r.width));
+      const overLeft = Math.min(1, Math.max(0, (box.left - r.left + 24) / r.width));
+      const t = overRight || overLeft;
+      const dir = overRight ? -1 : 1;
+      card.style.transform = t
+        ? `perspective(1200px) rotateY(${dir * t * 32}deg) scale(${1 - t * 0.14}) translateZ(${-t * 60}px)`
+        : '';
+      card.style.opacity = String(1 - t * 0.55);
+      card.style.transformOrigin = overRight ? 'left center' : 'right center';
+    });
+  }, []);
+
   const updateProgress = useCallback(() => {
     const el = railRef.current;
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
     setScrollProgress(max > 0 ? el.scrollLeft / max : 0);
-  }, []);
+    requestAnimationFrame(applyEdgeFold);
+  }, [applyEdgeFold]);
+
+  useEffect(() => {
+    const t = setTimeout(applyEdgeFold, 900);
+    window.addEventListener('resize', applyEdgeFold);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('resize', applyEdgeFold);
+    };
+  }, [applyEdgeFold, activeCategory, activeAudience]);
 
   // Reset rail when filters change
   useEffect(() => {
@@ -223,7 +252,9 @@ export const EventsPortfolio: React.FC<EventsPortfolioProps> = ({ onSelectEvent 
               className="w-[78vw] max-w-[300px] sm:w-[330px] sm:max-w-none shrink-0"
               style={{ transformPerspective: 1200 }}
             >
-              <EventCard event={event} index={idx} className="h-full" onSelectEvent={onSelectEvent} />
+              <div data-fold className="h-full transition-[transform,opacity] duration-200 ease-out will-change-transform">
+                <EventCard event={event} index={idx} className="h-full" onSelectEvent={onSelectEvent} />
+              </div>
             </motion.div>
           ))}
         </AnimatePresence>
