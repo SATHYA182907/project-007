@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Maximize2, X, ZoomIn, ZoomOut, Image as ImageIcon } from 'lucide-react';
+import { Maximize2, X, ZoomIn, ZoomOut, Image as ImageIcon, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { SectionHeader } from './fx';
 
 import p10_1 from '../assets/events/portfolio_p10_img1.jpeg';
 import p10_2 from '../assets/events/portfolio_p10_img2.jpeg';
@@ -43,6 +44,7 @@ export const GallerySection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const categories = [
     'All',
@@ -97,189 +99,225 @@ export const GallerySection: React.FC = () => {
     ? galleryItems
     : galleryItems.filter((item) => item.category === activeCategory);
 
+  const PREVIEW = 8;
+  const visibleItems = showAll ? filteredItems : filteredItems.slice(0, PREVIEW);
+  const hiddenCount = filteredItems.length - visibleItems.length;
+
+  const step = useCallback(
+    (dir: 1 | -1) => {
+      setLightboxItem((cur) => {
+        if (!cur) return cur;
+        const i = filteredItems.findIndex((g) => g.id === cur.id);
+        return filteredItems[(i + dir + filteredItems.length) % filteredItems.length];
+      });
+      setIsZoomed(false);
+    },
+    [filteredItems]
+  );
+
+  useEffect(() => {
+    if (!lightboxItem) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxItem(null);
+      if (e.key === 'ArrowRight') step(1);
+      if (e.key === 'ArrowLeft') step(-1);
+    };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [lightboxItem, step]);
+
+  // Bento rhythm: feature tiles at fixed positions (desktop only)
+  const spanFor = (idx: number) => {
+    const m = idx % 8;
+    if (m === 0) return 'sm:col-span-2 sm:row-span-2';
+    if (m === 5) return 'lg:col-span-2';
+    return '';
+  };
+
   return (
-    <section id="gallery" className="relative py-24 sm:py-32 bg-brand-dark text-brand-ivory border-t border-white/5 overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute top-1/4 left-10 w-[600px] h-[600px] bg-brand-gold/5 rounded-full blur-[170px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-10 w-[500px] h-[500px] bg-brand-lavender/5 rounded-full blur-[160px] pointer-events-none" />
+    <section id="gallery" className="section bg-brand-darker text-brand-ivory border-t border-white/5">
+      <div className="fx-aurora top-1/4 left-10 w-[600px] h-[600px] bg-brand-gold/[0.06]" />
+      <div className="fx-aurora bottom-1/4 right-10 w-[500px] h-[500px] bg-brand-lavender/[0.06]" style={{ animationDelay: '-7s' }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-card border border-brand-gold/30 mb-4"
-          >
-            <ImageIcon className="w-3.5 h-3.5 text-brand-gold" />
-            <span className="text-xs font-semibold tracking-widest text-brand-gold uppercase">
-              Authentic Photographic Record
-            </span>
-          </motion.div>
+        <SectionHeader
+          align="left"
+          className="mb-6"
+          icon={<ImageIcon />}
+          eyebrow="Authentic Photographic Record"
+          title="Moments Beyond"
+          accent="the Screen"
+          subtitle="Real people, unposed joy, and genuine community bonds captured live across our 21 offline initiatives."
+        />
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-brand-ivory leading-tight mb-4"
-          >
-            Moments Beyond the Screen
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-base sm:text-lg text-brand-mutedIvory font-light leading-relaxed"
-          >
-            Real people, unposed joy, and genuine community bonds captured live across our 21 offline initiatives.
-          </motion.p>
-        </div>
-
-        {/* Dedicated Nana Nani Notice Banner */}
-        {activeCategory === 'Nana Nani Events' && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-4 rounded-2xl glass-card border border-brand-gold/40 bg-brand-gold/10 text-center max-w-2xl mx-auto"
-          >
-            <span className="text-xs font-semibold text-brand-gold uppercase tracking-wider block mb-1">
-              Dedicated Ananya’s Nana Nani Gallery Section
-            </span>
-            <p className="text-xs text-brand-ivory/90">
-              Featuring verified Onam celebrations and Women's Day gatherings for senior residents. Dynamic gallery architecture prepared for seamless integration of additional Nana Nani event photographs.
-            </p>
-          </motion.div>
-        )}
-
-        {/* Category Filter Chips */}
-        <div className="mb-8 sm:mb-12">
-          <div className="flex items-center justify-between sm:justify-center gap-2 mb-2 text-xs text-brand-mutedIvory font-medium sm:hidden">
-            <span className="uppercase tracking-wider text-[11px] text-brand-gold">Filter Gallery</span>
-            <span className="text-[10px] text-brand-gold/70 font-mono">Swipe →</span>
-          </div>
-          <div className="overflow-x-auto pb-2 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="inline-flex sm:flex sm:flex-wrap items-center sm:justify-center gap-1.5 sm:gap-2 p-1.5 rounded-2xl glass-card border border-white/10 shadow-lg sm:max-w-5xl">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider whitespace-nowrap transition-all duration-300 ${
-                    activeCategory === cat
-                      ? 'bg-gold-gradient text-brand-dark shadow-glow-gold'
-                      : 'text-brand-mutedIvory hover:text-brand-ivory hover:bg-white/5'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+        {/* Category chips with sliding indicator */}
+        <div className="mb-5 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="inline-flex items-center gap-0.5 p-1 rounded-full fx-glass">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setShowAll(false);
+                }}
+                className={`relative px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap transition-colors duration-300 ${
+                  activeCategory === cat ? 'text-brand-dark' : 'text-brand-mutedIvory hover:text-brand-ivory'
+                }`}
+              >
+                {activeCategory === cat && (
+                  <motion.span layoutId="galleryPill" className="absolute inset-0 rounded-full bg-gold-gradient shadow-glow-gold" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />
+                )}
+                <span className="relative">{cat}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Dynamic Masonry-Style Gallery Grid */}
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          <AnimatePresence>
-            {filteredItems.map((item, idx) => (
-              <motion.div
+        <AnimatePresence>
+          {activeCategory === 'Nana Nani Events' && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="mb-5 p-4 rounded-2xl fx-glass border-brand-gold/40 bg-brand-gold/10">
+                <span className="text-xs font-semibold text-brand-gold uppercase tracking-wider block mb-1">
+                  Dedicated Ananya’s Nana Nani Gallery Section
+                </span>
+                <p className="text-xs text-brand-ivory/90">
+                  Featuring verified Onam celebrations and Women's Day gatherings for senior residents. Dynamic gallery architecture prepared for seamless integration of additional Nana Nani event photographs.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Bento grid */}
+        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 auto-rows-[140px] sm:auto-rows-[170px] lg:auto-rows-[190px] gap-2.5 sm:gap-4 grid-flow-dense">
+          <AnimatePresence mode="popLayout">
+            {visibleItems.map((item, idx) => (
+              <motion.button
                 key={item.id}
                 layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, delay: idx * 0.03 }}
-                whileHover={{ y: -5 }}
+                initial={{ opacity: 0, scale: 0.85, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ duration: 0.6, delay: (idx % PREVIEW) * 0.04, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => {
                   setLightboxItem(item);
                   setIsZoomed(false);
                 }}
-                className="group cursor-pointer relative rounded-2xl overflow-hidden glass-card border border-white/10 hover:border-brand-gold/40 shadow-xl transition-all duration-300 aspect-[4/3] bg-black/50"
+                className={`group relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 hover:border-brand-gold/50 bg-black/50 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold ${spanFor(idx)}`}
               >
                 <img
                   src={item.src}
                   alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/25 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-
-                <div className="absolute bottom-3.5 left-3.5 right-3.5 z-10 flex flex-col justify-end">
-                  <span className="text-[9px] font-bold text-brand-gold uppercase tracking-wider mb-0.5">
-                    {item.category}
-                  </span>
-                  <h4 className="text-xs sm:text-sm font-serif font-semibold text-brand-ivory group-hover:text-brand-gold transition-colors line-clamp-1">
-                    {item.title}
-                  </h4>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-3 left-3 right-3 z-10 translate-y-1 group-hover:translate-y-0 transition-transform duration-500">
+                  <span className="text-[9px] font-bold text-brand-gold uppercase tracking-wider block mb-0.5">{item.category}</span>
+                  <h4 className="text-xs sm:text-sm font-serif font-semibold text-brand-ivory line-clamp-1">{item.title}</h4>
+                  <p className="hidden sm:block text-[11px] text-brand-mutedIvory/90 leading-snug line-clamp-2 max-h-0 opacity-0 group-hover:max-h-10 group-hover:opacity-100 group-hover:mt-1 transition-all duration-500">
+                    {item.caption}
+                  </p>
                 </div>
-
-                <div className="absolute top-3 right-3 p-1.5 rounded-full bg-black/60 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="absolute top-3 right-3 p-1.5 rounded-full bg-black/60 backdrop-blur-md opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300">
                   <Maximize2 className="w-3.5 h-3.5 text-brand-gold" />
-                </div>
-              </motion.div>
+                </span>
+              </motion.button>
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {(hiddenCount > 0 || showAll) && filteredItems.length > PREVIEW && (
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => setShowAll((v) => !v)}
+              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full fx-glass hover:border-brand-gold/50 text-xs font-semibold uppercase tracking-wider text-brand-ivory transition-colors"
+            >
+              <span>{showAll ? 'Show fewer photos' : `View all ${filteredItems.length} photographs`}</span>
+              <ChevronDown className={`w-4 h-4 text-brand-gold transition-transform duration-300 ${showAll ? 'rotate-180' : 'group-hover:translate-y-0.5'}`} />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Lightbox Modal with Zoom & Captions */}
+      {/* Lightbox */}
       <AnimatePresence>
         {lightboxItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl"
+            onClick={() => setLightboxItem(null)}
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.92 }}
-              className="relative max-w-4xl w-full max-h-[90vh] rounded-3xl overflow-hidden glass-card border border-brand-gold/40 bg-brand-dark/95 flex flex-col shadow-2xl"
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 20 }}
+              transition={{ type: 'spring', damping: 26, stiffness: 280 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-5xl w-full max-h-[92vh] rounded-3xl overflow-hidden fx-glass border-brand-gold/30 flex flex-col"
             >
-              {/* Lightbox Controls Top Bar */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-brand-dark/90">
-                <span className="text-xs font-mono uppercase tracking-wider text-brand-gold">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-white/10">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-brand-gold">
                   {lightboxItem.category} • Authentic Photograph
                 </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setIsZoomed(!isZoomed)}
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-brand-ivory transition-colors"
-                    title={isZoomed ? 'Zoom out' : 'Zoom in'}
-                  >
+                <div className="flex items-center gap-1.5">
+                  <button onClick={() => setIsZoomed(!isZoomed)} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-brand-ivory transition-colors" title={isZoomed ? 'Zoom out' : 'Zoom in'}>
                     {isZoomed ? <ZoomOut className="w-4 h-4" /> : <ZoomIn className="w-4 h-4" />}
                   </button>
-                  <button
-                    onClick={() => setLightboxItem(null)}
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-brand-ivory hover:text-brand-gold transition-colors"
-                    title="Close"
-                  >
-                    <X className="w-5 h-5" />
+                  <button onClick={() => setLightboxItem(null)} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-brand-ivory hover:text-brand-gold transition-colors" title="Close">
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Lightbox Image Stage */}
-              <div className="p-4 flex-grow flex items-center justify-center overflow-auto bg-black/60 max-h-[65vh]">
-                <img
-                  src={lightboxItem.src}
-                  alt={lightboxItem.title}
-                  className={`max-w-full max-h-[60vh] object-contain rounded-xl transition-transform duration-300 ${
-                    isZoomed ? 'scale-150 cursor-zoom-out' : 'cursor-zoom-in'
-                  }`}
-                  onClick={() => setIsZoomed(!isZoomed)}
-                />
+              <div className="relative flex-grow flex items-center justify-center overflow-auto bg-black/60 max-h-[65vh]">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={lightboxItem.id}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.35 }}
+                    src={lightboxItem.src}
+                    alt={lightboxItem.title}
+                    className={`max-w-full max-h-[62vh] object-contain transition-transform duration-300 ${isZoomed ? 'scale-150 cursor-zoom-out' : 'cursor-zoom-in'}`}
+                    onClick={() => setIsZoomed(!isZoomed)}
+                  />
+                </AnimatePresence>
+                {filteredItems.length > 1 && (
+                  <>
+                    <button onClick={() => step(-1)} aria-label="Previous photo" className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 hover:border-brand-gold/60 flex items-center justify-center text-brand-ivory hover:text-brand-gold transition-colors">
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button onClick={() => step(1)} aria-label="Next photo" className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 hover:border-brand-gold/60 flex items-center justify-center text-brand-ivory hover:text-brand-gold transition-colors">
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </>
+                )}
               </div>
 
-              {/* Caption Footer */}
-              <div className="p-6 border-t border-white/10 bg-brand-card/90">
-                <h4 className="text-base sm:text-lg font-serif font-bold text-brand-ivory mb-1">
-                  {lightboxItem.title}
-                </h4>
-                <p className="text-xs sm:text-sm text-brand-mutedIvory font-light leading-relaxed">
-                  {lightboxItem.caption}
-                </p>
+              <div className="p-5 border-t border-white/10 flex items-end justify-between gap-4">
+                <div>
+                  <h4 className="text-base sm:text-lg font-serif font-bold text-brand-ivory mb-1">{lightboxItem.title}</h4>
+                  <p className="text-xs sm:text-sm text-brand-mutedIvory font-light leading-relaxed">{lightboxItem.caption}</p>
+                </div>
+                <span className="shrink-0 text-[11px] font-mono text-brand-mutedIvory/60">
+                  {filteredItems.findIndex((g) => g.id === lightboxItem.id) + 1} / {filteredItems.length}
+                </span>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </section>

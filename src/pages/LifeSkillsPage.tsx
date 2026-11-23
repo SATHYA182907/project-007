@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Brain, Sparkles, Layers, Shield, Clock } from 'lucide-react';
+import { SplitText } from '../components/fx';
 import logoImg from '../assets/logo/offscreen_logo.jpg';
 
 export const LifeSkillsPage: React.FC = () => {
@@ -41,9 +42,9 @@ export const LifeSkillsPage: React.FC = () => {
       </header>
 
       {/* Main Life Skills Placeholder & Coming Soon Stage */}
-      <main className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-8 py-8 sm:py-16 my-auto">
+      <main className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10 my-auto">
         {/* Life Skills Hero Section */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -54,14 +55,15 @@ export const LifeSkillsPage: React.FC = () => {
             <span>Division Under Formulation</span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
+          <SplitText
+            as="h1"
+            by="chars"
+            immediate
+            delay={0.1}
+            stagger={0.05}
+            text="LIFE SKILLS"
             className="text-3xl sm:text-6xl font-serif font-bold text-[#111827] tracking-tight leading-tight mb-3 sm:mb-4"
-          >
-            LIFE SKILLS
-          </motion.h1>
+          />
 
           <motion.p
             initial={{ opacity: 0, y: 15 }}
@@ -77,7 +79,7 @@ export const LifeSkillsPage: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="p-5 sm:p-10 rounded-2xl sm:rounded-3xl bg-white/80 backdrop-blur-md border border-[#DDD6FE] shadow-[0_20px_50px_rgba(138,128,184,0.12)] text-left"
+            className="fx-border relative p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-white/80 backdrop-blur-md border border-[#DDD6FE] shadow-[0_20px_50px_rgba(138,128,184,0.12)] text-left"
           >
             <div className="flex items-center gap-3 text-sm font-semibold text-[#7C3AED] uppercase tracking-wider mb-3">
               <Sparkles className="w-4 h-4 text-[#7C3AED]" />

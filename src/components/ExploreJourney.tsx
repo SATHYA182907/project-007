@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Calendar, MapPin, Users, ChevronRight, Compass } from 'lucide-react';
+import { Sparkles, Calendar, MapPin, Users, ChevronRight, ChevronLeft, Compass, Quote } from 'lucide-react';
+import { SectionHeader } from './fx';
 
 import jWalkathon from '../assets/events/portfolio_p10_img1.jpeg';
 import jDiwali from '../assets/events/portfolio_p11_img4.jpeg';
@@ -112,81 +113,66 @@ export const ExploreJourney: React.FC = () => {
   ];
 
   const [activeIdx, setActiveIdx] = useState(2); // Diwali Carnival default
+  const [direction, setDirection] = useState(1);
   const activeMilestone = milestones[activeIdx];
 
+  const go = (idx: number) => {
+    const next = (idx + milestones.length) % milestones.length;
+    setDirection(next > activeIdx ? 1 : -1);
+    setActiveIdx(next);
+  };
+
   return (
-    <section id="explore-journey" className="relative py-24 sm:py-32 bg-brand-dark text-brand-ivory overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute top-0 left-1/3 w-[600px] h-[600px] bg-brand-gold/5 rounded-full blur-[170px] pointer-events-none" />
-      <div className="absolute bottom-0 right-10 w-[500px] h-[500px] bg-brand-lavender/5 rounded-full blur-[160px] pointer-events-none" />
+    <section id="explore-journey" className="section bg-brand-dark text-brand-ivory">
+      <div className="fx-aurora top-0 left-1/3 w-[600px] h-[600px] bg-brand-gold/[0.07]" />
+      <div className="fx-aurora bottom-0 right-10 w-[500px] h-[500px] bg-brand-lavender/[0.07]" style={{ animationDelay: '-6s' }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-card border border-brand-gold/30 mb-4"
-          >
-            <Compass className="w-3.5 h-3.5 text-brand-gold" />
-            <span className="text-xs font-semibold tracking-widest text-brand-gold uppercase">
-              Our Evolution
-            </span>
-          </motion.div>
+        <SectionHeader
+          align="left"
+          icon={<Compass />}
+          eyebrow="Our Evolution"
+          title="Explore Our"
+          accent="Journey"
+          subtitle="From quiet classroom brain gym experiments to city-scale movements with thousands of participants, experience the story of Offscreen Hub through real photographs and measurable milestones."
+          aside={
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs text-brand-mutedIvory">
+                <span className="text-2xl font-serif font-bold text-brand-gold">{String(activeIdx + 1).padStart(2, '0')}</span>
+                <span className="mx-1">/</span>
+                {String(milestones.length).padStart(2, '0')}
+              </span>
+              <button onClick={() => go(activeIdx - 1)} aria-label="Previous milestone" className="w-10 h-10 rounded-full fx-glass hover:border-brand-gold/50 flex items-center justify-center hover:text-brand-gold transition-colors">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button onClick={() => go(activeIdx + 1)} aria-label="Next milestone" className="w-10 h-10 rounded-full bg-gold-gradient text-brand-dark flex items-center justify-center shadow-glow-gold hover:scale-105 transition-transform">
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          }
+        />
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-brand-ivory leading-tight mb-4"
-          >
-            Explore Our Journey
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-base sm:text-lg text-brand-mutedIvory font-light leading-relaxed"
-          >
-            From quiet classroom brain gym experiments to city-scale movements with thousands of participants, experience the story of Offscreen Hub through real photographs and measurable milestones.
-          </motion.p>
-        </div>
-
-        {/* Interactive Chronological Milestone Selector */}
-        <div className="mb-8 sm:mb-12">
-          <span className="text-[10px] text-brand-gold/70 sm:hidden block text-center mb-2 font-mono uppercase tracking-wider">
-            ← Swipe phases to navigate →
-          </span>
-          <div className="overflow-x-auto pb-3 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="flex items-center justify-between min-w-[650px] sm:min-w-[700px] relative border-b border-white/10 px-2 sm:px-4">
+        {/* Timeline rail with animated progress line */}
+        <div className="mb-6 sm:mb-8 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="relative min-w-[880px] lg:min-w-0">
+            <div className="absolute left-0 right-0 top-[7px] h-px bg-white/10" />
+            <motion.div
+              className="absolute left-0 top-[7px] h-px bg-gold-gradient shadow-glow-gold"
+              animate={{ width: `${(activeIdx / (milestones.length - 1)) * 100}%` }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            />
+            <div className="relative flex justify-between">
               {milestones.map((m, idx) => {
                 const isActive = idx === activeIdx;
+                const isPast = idx < activeIdx;
                 return (
-                  <button
-                    key={m.id}
-                    onClick={() => setActiveIdx(idx)}
-                    className={`flex flex-col items-center pb-3 sm:pb-4 relative transition-all duration-300 group focus:outline-none ${
-                      isActive ? 'opacity-100' : 'opacity-50 hover:opacity-80'
-                    }`}
-                  >
-                    <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-wider text-brand-gold mb-1">
-                      {m.year}
+                  <button key={m.id} onClick={() => go(idx)} className="group flex flex-col items-center text-center focus:outline-none w-[120px]">
+                    <span className="relative w-[15px] h-[15px] flex items-center justify-center">
+                      {isActive && <motion.span layoutId="journeyDot" className="absolute -inset-1.5 rounded-full border border-brand-gold/60" />}
+                      <span className={`w-[9px] h-[9px] rounded-full transition-all duration-300 ${isActive ? 'bg-brand-gold shadow-glow-gold scale-125' : isPast ? 'bg-brand-gold/70' : 'bg-white/20 group-hover:bg-white/50'}`} />
                     </span>
-                    <span className="text-xs sm:text-sm font-serif font-medium text-brand-ivory whitespace-nowrap px-2">
-                      {m.chapter}
-                    </span>
-                    {/* Active Indicator Underline */}
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeJourneyIndicator"
-                        className="absolute -bottom-[1px] left-0 right-0 h-[2.5px] bg-gold-gradient shadow-glow-gold"
-                      />
-                    )}
+                    <span className={`mt-2.5 text-[9px] uppercase font-mono tracking-wider transition-colors ${isActive ? 'text-brand-gold' : 'text-brand-gold/50'}`}>{m.year}</span>
+                    <span className={`text-xs font-serif whitespace-nowrap transition-colors ${isActive ? 'text-brand-ivory' : 'text-brand-mutedIvory/50 group-hover:text-brand-mutedIvory'}`}>{m.chapter}</span>
                   </button>
                 );
               })}
@@ -194,96 +180,84 @@ export const ExploreJourney: React.FC = () => {
           </div>
         </div>
 
-        {/* Milestone Spotlight Showcase */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeMilestone.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center rounded-2xl sm:rounded-3xl glass-card border border-white/10 p-4 sm:p-8 lg:p-10 shadow-2xl bg-brand-card/90"
-          >
-            {/* Left: Authentic Event Image */}
-            <div className="lg:col-span-7 relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/10] shadow-xl group border border-white/10">
-              <img
-                src={activeMilestone.image}
-                alt={activeMilestone.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-              <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex flex-wrap items-center justify-between gap-2 text-xs text-brand-ivory">
-                <span className="inline-flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 font-medium text-[11px] sm:text-xs">
-                  <MapPin className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-brand-gold shrink-0" />
-                  <span className="truncate max-w-[200px] sm:max-w-none">{activeMilestone.location}</span>
-                </span>
-                <span className="bg-brand-gold/90 text-brand-dark px-2.5 py-1 rounded-full font-bold text-[10px] sm:text-[11px] shadow-sm shrink-0">
-                  {activeMilestone.participants}
-                </span>
-              </div>
+        {/* Milestone Spotlight */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-stretch">
+          <div className="lg:col-span-7 relative rounded-3xl overflow-hidden aspect-[16/10] lg:aspect-auto lg:min-h-[400px] border border-white/10 shadow-2xl bg-black">
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.div
+                key={activeMilestone.id}
+                custom={direction}
+                initial={{ clipPath: direction > 0 ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)', scale: 1.15 }}
+                animate={{ clipPath: 'inset(0 0 0 0%)', scale: 1 }}
+                exit={{ opacity: 0.4 }}
+                transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
+                className="absolute inset-0"
+              >
+                <img src={activeMilestone.image} alt={activeMilestone.title} className="w-full h-full object-cover" />
+              </motion.div>
+            </AnimatePresence>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent pointer-events-none" />
+            <span className="absolute top-3 right-4 text-6xl sm:text-8xl font-serif font-bold text-white/[0.08] select-none pointer-events-none">
+              {String(activeIdx + 1).padStart(2, '0')}
+            </span>
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex flex-wrap items-center justify-between gap-2 text-xs text-brand-ivory">
+              <span className="inline-flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 font-medium text-[11px] sm:text-xs">
+                <MapPin className="w-3.5 h-3.5 text-brand-gold shrink-0" />
+                <span className="truncate max-w-[200px] sm:max-w-none">{activeMilestone.location}</span>
+              </span>
+              <span className="bg-brand-gold text-brand-dark px-3 py-1.5 rounded-full font-bold text-[10px] sm:text-[11px] shrink-0">{activeMilestone.participants}</span>
             </div>
+          </div>
 
-            {/* Right: Milestone Story & Impact */}
-            <div className="lg:col-span-5 space-y-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-brand-gold/20 text-xs text-brand-gold font-mono">
-                <Calendar className="w-3.5 h-3.5" />
-                <span>{activeMilestone.year} • {activeMilestone.chapter}</span>
-              </div>
+          <div className="lg:col-span-5 rounded-3xl fx-glass p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeMilestone.id}
+                initial="hidden"
+                animate="show"
+                exit="exit"
+                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } }, exit: { opacity: 0, transition: { duration: 0.2 } } }}
+                className="space-y-4"
+              >
+                {[
+                  <div key="tag" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-brand-gold/20 text-xs text-brand-gold font-mono">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>{activeMilestone.year} • {activeMilestone.chapter}</span>
+                  </div>,
+                  <h3 key="t" className="text-2xl sm:text-3xl font-serif font-bold text-brand-ivory leading-snug">{activeMilestone.title}</h3>,
+                  <p key="s" className="text-sm text-brand-mutedIvory leading-relaxed font-light">{activeMilestone.story}</p>,
+                  <div key="m" className="grid grid-cols-2 gap-3">
+                    <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10">
+                      <div className="flex items-center gap-1.5 text-[11px] text-brand-gold font-semibold mb-0.5"><Users className="w-3.5 h-3.5" /><span>Audience</span></div>
+                      <span className="text-sm font-serif font-bold text-brand-ivory">{activeMilestone.participants}</span>
+                    </div>
+                    <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10">
+                      <div className="flex items-center gap-1.5 text-[11px] text-brand-gold font-semibold mb-0.5"><Sparkles className="w-3.5 h-3.5" /><span>Screen-Free Value</span></div>
+                      <span className="text-sm font-serif font-bold text-brand-ivory">{activeMilestone.screenTime}</span>
+                    </div>
+                  </div>,
+                  <div key="k" className="relative p-4 pl-10 rounded-xl bg-gradient-to-r from-brand-gold/15 to-transparent border-l-2 border-brand-gold">
+                    <Quote className="absolute left-3 top-4 w-4 h-4 text-brand-gold/70" />
+                    <span className="text-[10px] font-semibold text-brand-gold uppercase tracking-wider block mb-1">Historical Significance</span>
+                    <p className="text-xs text-brand-ivory/90 leading-relaxed italic">“{activeMilestone.keyTakeaway}”</p>
+                  </div>,
+                ].map((el, i) => (
+                  <motion.div key={i} variants={{ hidden: { opacity: 0, y: 16, filter: 'blur(6px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}>
+                    {el}
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
 
-              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-brand-ivory leading-snug">
-                {activeMilestone.title}
-              </h3>
-
-              <p className="text-sm sm:text-base text-brand-mutedIvory leading-relaxed font-light">
-                {activeMilestone.story}
-              </p>
-
-              {/* Impact Metric Chips */}
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-1.5 text-xs text-brand-gold font-semibold mb-0.5">
-                    <Users className="w-3.5 h-3.5" />
-                    <span>Audience</span>
-                  </div>
-                  <span className="text-sm font-serif font-bold text-brand-ivory">
-                    {activeMilestone.participants}
-                  </span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-1.5 text-xs text-brand-gold font-semibold mb-0.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Screen-Free Value</span>
-                  </div>
-                  <span className="text-sm font-serif font-bold text-brand-ivory">
-                    {activeMilestone.screenTime}
-                  </span>
-                </div>
-              </div>
-
-              {/* Key Takeaway Box */}
-              <div className="p-4 rounded-xl bg-brand-gold/10 border border-brand-gold/30">
-                <span className="text-[11px] font-semibold text-brand-gold uppercase tracking-wider block mb-1">
-                  Historical Significance
-                </span>
-                <p className="text-xs text-brand-ivory/90 leading-relaxed italic">
-                  “{activeMilestone.keyTakeaway}”
-                </p>
-              </div>
-
-              {/* Next Milestone Button */}
-              <div className="pt-2 flex items-center justify-between">
-                <button
-                  onClick={() => setActiveIdx((prev) => (prev + 1) % milestones.length)}
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-goldLight transition-colors"
-                >
-                  <span>Explore Next Milestone</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            <button
+              onClick={() => go(activeIdx + 1)}
+              className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-goldLight transition-colors group self-start"
+            >
+              <span>Explore Next Milestone</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );

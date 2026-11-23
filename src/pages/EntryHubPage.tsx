@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Compass, ArrowRight, Sparkles, Brain } from 'lucide-react';
+import { SplitText } from '../components/fx';
 import logoImg from '../assets/logo/offscreen_logo.jpg';
 
 // Authentic event preview photos for the Events card
@@ -69,14 +70,15 @@ export const EntryHubPage: React.FC = () => {
             </span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.08 }}
-            className="text-3xl sm:text-4xl lg:text-4xl font-serif font-bold text-[#111827] tracking-tight leading-tight mb-1"
-          >
-            OFFSCREEN HUB
-          </motion.h1>
+          <SplitText
+            as="h1"
+            by="chars"
+            immediate
+            delay={0.1}
+            stagger={0.04}
+            text="OFFSCREEN HUB"
+            className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#111827] tracking-tight leading-tight mb-1"
+          />
 
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -103,7 +105,7 @@ export const EntryHubPage: React.FC = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="group relative rounded-2xl p-5 sm:p-6 bg-white/90 backdrop-blur-xl border border-white/95 shadow-[0_15px_35px_rgba(20,24,35,0.05)] hover:shadow-[0_20px_45px_rgba(212,175,55,0.18)] hover:-translate-y-1 transition-all duration-400 flex flex-col justify-between overflow-hidden"
+            className="fx-border group relative rounded-2xl p-5 sm:p-6 bg-white/90 backdrop-blur-xl border border-white/95 shadow-[0_15px_35px_rgba(20,24,35,0.05)] hover:shadow-[0_20px_45px_rgba(212,175,55,0.18)] hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between overflow-hidden"
           >
             {/* Ambient Card Glow */}
             <div className="absolute -top-16 -right-16 w-44 h-44 bg-[#FEF3C7]/60 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
@@ -130,21 +132,24 @@ export const EntryHubPage: React.FC = () => {
               {/* Real Photographs Grid (Compact Aspect Ratio) */}
               <div className="grid grid-cols-2 gap-2 mb-4">
                 {eventPreviewImages.map((img, i) => (
-                  <div
+                  <motion.div
                     key={i}
+                    initial={{ opacity: 0, scale: 0.85, filter: 'blur(6px)' }}
+                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                    transition={{ duration: 0.6, delay: 0.45 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                     className="relative rounded-xl overflow-hidden h-16 sm:h-20 group/img bg-[#E5E7EB] shadow-xs"
                   >
                     <img
                       src={img.src}
                       alt={img.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute bottom-1.5 left-2 right-2 text-white">
                       <p className="text-[10px] font-semibold leading-tight line-clamp-1">{img.title}</p>
                       <p className="text-[8.5px] text-[#E5C96D] font-mono leading-none">{img.stat}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -166,7 +171,7 @@ export const EntryHubPage: React.FC = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.28 }}
-            className="group relative rounded-2xl p-5 sm:p-6 bg-white/90 backdrop-blur-xl border border-white/95 shadow-[0_15px_35px_rgba(20,24,35,0.05)] hover:shadow-[0_20px_45px_rgba(138,128,184,0.18)] hover:-translate-y-1 transition-all duration-400 flex flex-col justify-between overflow-hidden"
+            className="fx-border group relative rounded-2xl p-5 sm:p-6 bg-white/90 backdrop-blur-xl border border-white/95 shadow-[0_15px_35px_rgba(20,24,35,0.05)] hover:shadow-[0_20px_45px_rgba(138,128,184,0.18)] hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between overflow-hidden"
           >
             {/* Ambient Card Glow */}
             <div className="absolute -top-16 -right-16 w-44 h-44 bg-[#EDE9FE]/70 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />

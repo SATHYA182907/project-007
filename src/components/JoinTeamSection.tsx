@@ -8,8 +8,12 @@ import {
   FileText,
   Send,
   X,
+  HeartHandshake,
+  Sparkles,
+  Clock3,
 } from 'lucide-react';
 import { dbService } from '../services/db';
+import { SectionHeader, Reveal } from './fx';
 
 export const JoinTeamSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -146,56 +150,48 @@ export const JoinTeamSection: React.FC = () => {
   };
 
   return (
-    <section id="join-team" className="relative py-24 sm:py-32 bg-brand-dark text-brand-ivory border-t border-white/5 overflow-hidden">
-      {/* Background radial glow */}
-      <div className="absolute top-1/4 -right-20 w-[600px] h-[600px] bg-brand-lavender/5 rounded-full blur-[170px] pointer-events-none" />
-      <div className="absolute bottom-10 -left-20 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[160px] pointer-events-none" />
+    <section id="join-team" className="section bg-brand-dark text-brand-ivory border-t border-white/5">
+      <div className="fx-aurora top-1/4 -right-20 w-[600px] h-[600px] bg-brand-lavender/[0.07]" />
+      <div className="fx-aurora bottom-10 -left-20 w-[500px] h-[500px] bg-brand-gold/[0.06]" style={{ animationDelay: '-8s' }} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-card border border-brand-gold/30 mb-4"
-          >
-            <Users className="w-3.5 h-3.5 text-brand-gold" />
-            <span className="text-xs font-semibold tracking-widest text-brand-gold uppercase">
-              Join Our Team
-            </span>
-          </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl font-serif font-bold text-brand-ivory leading-tight mb-4"
-          >
-            Be Part of Something Meaningful.
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-base sm:text-lg text-brand-mutedIvory font-light leading-relaxed max-w-2xl mx-auto"
-          >
-            “Join Offscreen Hub in creating experiences that bring people together and inspire meaningful change beyond screens.”
-          </motion.p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="lg:col-span-5 lg:sticky lg:top-10">
+          <SectionHeader
+            align="left"
+            className="mb-6"
+            icon={<Users />}
+            eyebrow="Join Our Team"
+            title="Be Part of Something"
+            accent="Meaningful."
+            subtitle="“Join Offscreen Hub in creating experiences that bring people together and inspire meaningful change beyond screens.”"
+          />
+          <div className="hidden sm:grid grid-cols-1 gap-2.5">
+            {[
+              { icon: <HeartHandshake className="w-4 h-4" />, t: areaOptions.length + ' areas of interest', d: areaOptions.slice(0, 3).join(' • ') + ' & more' },
+              { icon: <Sparkles className="w-4 h-4" />, t: 'Secure CV upload', d: 'PDF, DOC, DOCX up to 5MB' },
+              { icon: <Clock3 className="w-4 h-4" />, t: 'Personal review', d: 'We review each application personally and will get in touch with you soon.' },
+            ].map((f, i) => (
+              <Reveal key={f.t} delay={0.2 + i * 0.08}>
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.03] border border-white/5">
+                  <span className="w-8 h-8 shrink-0 rounded-xl bg-brand-gold/10 border border-brand-gold/25 text-brand-gold flex items-center justify-center">{f.icon}</span>
+                  <div>
+                    <p className="text-xs font-semibold text-brand-ivory">{f.t}</p>
+                    <p className="text-[11px] text-brand-mutedIvory/80 leading-relaxed">{f.d}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
 
         {/* Form Container */}
-        <div className="max-w-3xl mx-auto">
+        <div className="lg:col-span-7">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="rounded-2xl sm:rounded-3xl glass-card border border-brand-gold/30 p-5 sm:p-10 md:p-12 shadow-2xl bg-brand-card/90 relative"
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="fx-border fx-border-on rounded-3xl fx-glass p-5 sm:p-8 relative"
           >
             <AnimatePresence mode="wait">
               {submitSuccess ? (
@@ -223,7 +219,7 @@ export const JoinTeamSection: React.FC = () => {
                   </button>
                 </motion.div>
               ) : (
-                <form key="form" onSubmit={handleSubmit} className="space-y-6">
+                <form key="form" onSubmit={handleSubmit} className="space-y-4">
                   {submitError && (
                     <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-3 text-red-300 text-xs">
                       <AlertCircle className="w-4 h-4 shrink-0" />
@@ -232,7 +228,7 @@ export const JoinTeamSection: React.FC = () => {
                   )}
 
                   {/* 1. Full Name, Email, Phone */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2 sm:col-span-2">
                       <label className="text-xs font-semibold uppercase tracking-wider text-brand-ivory block">
                         Full Name <span className="text-brand-gold">*</span>
@@ -243,7 +239,7 @@ export const JoinTeamSection: React.FC = () => {
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         placeholder="e.g. Ananya Sundaram"
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 focus:bg-white/[0.07] transition-all duration-300"
                       />
                     </div>
 
@@ -257,7 +253,7 @@ export const JoinTeamSection: React.FC = () => {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="e.g. ananya@example.com"
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 focus:bg-white/[0.07] transition-all duration-300"
                       />
                     </div>
 
@@ -271,7 +267,7 @@ export const JoinTeamSection: React.FC = () => {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="e.g. +91 98765 43210"
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 focus:bg-white/[0.07] transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -284,7 +280,7 @@ export const JoinTeamSection: React.FC = () => {
                     <select
                       value={formData.areaOfInterest}
                       onChange={(e) => setFormData({ ...formData, areaOfInterest: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-brand-dark border border-white/10 text-brand-ivory text-base sm:text-sm focus:outline-none focus:border-brand-gold transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-brand-dark border border-white/10 text-brand-ivory text-base sm:text-sm focus:outline-none focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 focus:bg-white/[0.07] transition-all duration-300"
                     >
                       {areaOptions.map((opt) => (
                         <option key={opt} value={opt} className="bg-brand-dark text-brand-ivory">
@@ -295,7 +291,7 @@ export const JoinTeamSection: React.FC = () => {
                   </div>
 
                   {/* 3. Skills & Experience */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-xs font-semibold uppercase tracking-wider text-brand-ivory block">
                         Key Skills & Talents
@@ -305,7 +301,7 @@ export const JoinTeamSection: React.FC = () => {
                         value={formData.skills}
                         onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
                         placeholder="e.g. Workshop Hosting, Emceeing, Yoga"
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 focus:bg-white/[0.07] transition-all duration-300"
                       />
                     </div>
 
@@ -318,7 +314,7 @@ export const JoinTeamSection: React.FC = () => {
                         value={formData.experience}
                         onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
                         placeholder="e.g. 2 years volunteering, student leader"
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 focus:bg-white/[0.07] transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -329,11 +325,11 @@ export const JoinTeamSection: React.FC = () => {
                       Why do you want to join Offscreen Hub?
                     </label>
                     <textarea
-                      rows={4}
+                      rows={3}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Share your passion for offline living, community work, or how you would like to contribute..."
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold transition-colors resize-none"
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-brand-ivory placeholder-brand-mutedIvory/40 text-base sm:text-sm focus:outline-none focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 focus:bg-white/[0.07] transition-all duration-300 resize-none"
                     />
                   </div>
 
@@ -362,7 +358,7 @@ export const JoinTeamSection: React.FC = () => {
                         </button>
                       </div>
                     ) : (
-                      <label className="border-2 border-dashed border-white/15 hover:border-brand-gold/40 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-white/[0.02] transition-all">
+                      <label className="border-2 border-dashed border-white/15 hover:border-brand-gold/40 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-white/[0.02] transition-all">
                         <Upload className="w-6 h-6 text-brand-gold mb-2" />
                         <span className="text-xs font-medium text-brand-ivory">
                           Click to upload your CV / Resume
@@ -388,16 +384,17 @@ export const JoinTeamSection: React.FC = () => {
                   </div>
 
                   {/* Submit CTA */}
-                  <div className="pt-4">
+                  <div className="pt-2">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-4 px-8 rounded-full bg-gold-gradient text-brand-dark font-semibold text-xs sm:text-sm tracking-wider uppercase shadow-glow-gold hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="relative overflow-hidden w-full py-4 px-8 rounded-full bg-gold-gradient text-brand-dark font-semibold text-xs sm:text-sm tracking-wider uppercase shadow-glow-gold hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <span>Transmitting Application...</span>
                       ) : (
                         <>
+                          <span className="absolute inset-0 -translate-x-full hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                           <span>SEND YOUR CV</span>
                           <Send className="w-4 h-4" />
                         </>
